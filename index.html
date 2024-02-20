@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+        body{
+            font-family: 'Montserrat';
+            background-color: rgb(226, 163, 25);
+            margin: 0;
+            padding: 0;
+        }
+        .container{
+            max-width: 800px;
+            background-color: aliceblue;
+            margin: 50px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 22px 0px rgba(0,0,0,0.75);
+            border-radius: 20px;
+        }
+        .timerandscore{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        #timer{
+            background-color: rgb(126, 224, 34);
+            padding: 15px;
+            border-radius: 20px;
+            border: 2px solid black;
+        }
+        #time{
+            color: rgb(211, 87, 38);
+        }
+        }
+        #question_container{
+            text-align: center;
+        }
+        #option_container button{
+            width:100%;
+            margin: 5px;
+            padding: 10px;
+            background-color:burlywood;
+            border-radius: 10px;
+            font-size: 20px;
+            box-shadow: inset 0px 0px 22px 0px rgba(0,0,0,0.75);
+        }
+        #submit{
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+
+        }
+        #click{
+            background-color: #32c888;
+            padding: 10px;
+            border-radius: 10px;    
+            width: 30%;
+            font-size: 1rem;
+            font-weight:900;
+        }
+
+        #display{
+            background-color: aliceblue;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        #result{
+            text-align: center;
+        }
+        #number{
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="timerandscore">
+            <h2 id="timer">TIME LEFT : <span id="time"> 60</span> seconds</h2>
+
+            <h2 id="score">SCORE : <span id="marks"></span></h2>
+        </div>
+        <div class="questionNUmber">
+            <h2 id="number"></h2>
+        </div>
+        <div class="question" id="quiz">
+            <h2 id="question_container"></h2>
+            <div id="option_container"></div>
+                <p id="display"></p>
+                <div id="submit"><button onclick="nextQuestion()" id="click">SUBMIT</button></div>
+            <div id="result"></div>
+        </div>
+    </div>
+    <script>
+        const quizdata = [
+        {
+        question: 'What is the capital of France?',
+        options: ['Paris', 'London', 'Berlin', 'Rome'],
+        answer: 'Paris'
+        },
+        {
+        question: 'Who is the first Indian woman to win an Asian Games gold in 400m run',
+        options: ['M.L. Valsamma','P.T. Usha','Kamaljit Sandhu','K.Malleshwari'],
+        answer: 'P.T. Usha'
+        },
+        {
+        question: 'The Tropic of cancer does not pass through',
+        options: ['India','Pakistan','Bangladesh','Myanmar'],
+        answer: 'Pakistan'
+        },
+        {
+        question: 'What is the chemical symbol for water?',
+        options: ['H2O', 'CO2', 'O2', 'NaCl'],
+        answer: 'H2O'
+        },
+        {
+        question: 'For which of the following disciplines is Nobel Prize awarded?',
+        options: ['Physics and Chemistry','Physiology or Medicine','Literature', 'Peace and Economics','All of the above'],
+        answer: 'All of the above'
+        },
+        {
+        question: 'What is the largest mammal?',
+        options: ['Blue whale', 'Elephant', 'Giraffe', 'Hippo'],
+        answer: 'Blue whale'
+        },
+        {
+        question: 'Entomology is the science that studies',
+        options: ['Behavior of human beings','Insects','The origin and history of technical and scientific terms','The formation of rocks'],
+        answer: 'Insects'
+        },
+        {
+        question: 'What is the tallest mountain in the world?',
+        options: ['Mount Everest', 'K2', 'Kangchenjunga', 'Lhotse'],
+        answer: 'Mount Everest'
+        },
+        {
+        question: 'Ozone hole refers to',
+        options: ['hole in ozone layer','decrease in the ozone layer in troposphere','decrease in thickness of ozone layer in stratosphere','increase in the thickness of ozone layer in troposphere'],
+        answer: 'decrease in thickness of ozone layer in stratosphere'
+        },
+        {
+        question: 'Which bird is known for its ability to mimic human speech?',
+        options: ['Parrot', 'Eagle', 'Owl', 'Penguin'],
+        answer: 'Parrot'
+        }];
+
+        
+        
+        let currentquestion = 0;
+        let marks=0;
+        let timeleft = 60;
+        
+        const timer = document.getElementById('time');
+        const timeInterval = setInterval(()=>{
+            timeleft--;
+            timer.textContent = timeleft;
+
+            if(timeleft<=0)
+            {
+                clearInterval(timeInterval);
+                alert('Time is Over');
+                const timer = document.getElementById('timer');
+                timer.style.backgroundColor = 'red';
+                let options = document.querySelectorAll('#option_container button');
+            options.forEach(button=>{
+                button.disabled = true;
+            });
+                click.disabled=true;
+                
+            }
+
+        },1000);
+
+        const length = quizdata.length;
+        // console.log(length);
+
+        function loadquestion(){
+            const question_container =document.getElementById('question_container');
+            const option_container= document.getElementById('option_container');
+            const number = document.getElementById('number');
+            
+            question_container.innerHTML= quizdata[currentquestion].question;
+
+            option_container.innerHTML ='';
+            quizdata[currentquestion].options.forEach(option=>{
+                const button = document.createElement("button");
+                button.innerHTML = option;
+                button.addEventListener('click', () => {
+                    button.style.backgroundColor = 'rgb(63, 197, 241)';
+                    button.style.color = 'white';
+                })
+
+                button.addEventListener('click',()=>selectanswer(option)
+                );
+
+                option_container.appendChild(button);
+            })
+            number.innerHTML=`${[currentquestion+1]} of ${length}:`;
+        }
+        const display = document.getElementById('display');
+
+
+        function selectanswer(selectedoption){
+
+            const answer = quizdata[currentquestion].answer;
+            display.innerHTML ='';
+            if(selectedoption === answer)
+            {
+                
+                display.innerHTML = selectedoption + '<h4> Your answer is Correct</h4>';
+                marks++;
+                const mark = document.getElementById('marks').innerHTML = `${marks}/10`;
+            }
+            else{
+                display.innerHTML = selectedoption + '<h4> Your answer is Wrong</h4> <br> The Correct Answer is : '+answer;
+            }
+
+            const answerButtons = document.querySelectorAll('#option_container button');
+            answerButtons.forEach(button=>{
+                button.disabled = true;
+            });
+            currentquestion++;
+
+            const click = document.getElementById('click');
+            click.addEventListener('mouseover',()=>{
+                click.style.backgroundColor = 'green';
+            })
+            click.addEventListener('mouseout',()=>{
+                click.style.backgroundColor = '#32c888';
+            })
+            
+            
+        }
+
+        function nextQuestion()
+        {
+            display.innerHTML='';
+            if(currentquestion < quizdata.length)
+            {
+                loadquestion();
+            }
+            else{
+                submitanswer();
+            }
+        }
+
+        function submitanswer(){
+            const printscore = document.getElementById('result');
+            printscore.innerHTML=`<h4>Your total marks is ${marks} out of 10 </h4>`;
+        }
+        loadquestion();
+        
+
+        
+    </script>
+</body>
+</html>
